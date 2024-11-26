@@ -27,11 +27,10 @@ namespace ClassLibrary
 
     {
         private int orderNumber;
-        private DateTime dateTime;
+        private DateTime dateTimes;
         private string customerName;
         private string customerPhone;
         private double taxAmount;
-        private double tariffAmount;
         private double totalAmount;
         private List<OrderDetail> orderDetails;
 
