@@ -10,6 +10,6 @@ namespace Driver
 {
     public class Driver
     {
-
+        public static void Main(string[] args) { }
     }
 }
