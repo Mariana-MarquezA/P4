@@ -40,7 +40,18 @@ public class OrderDetail
         // - stockPrice must be non-negative.
         // Postconditions:
         // - orderNumber, detailNumber and quantity are initialized to default values
-        public OrderDetail(string stockID, string stockName, double stockPrice){}
+        public OrderDetail(string stockID, string stockName, double stockPrice){
+            if (stockID == null || stockID == "")
+                throw new ArgumentException("Stock ID must not be empty.");
+            if (stockName == null || stockName == "")
+                throw new ArgumentException("Stock Name must not be empty.");
+            if (stockPrice < 0)
+                throw new ArgumentOutOfRangeException("Stock Price must be non-negative");
+
+            this.stockID = stockID; 
+            this.stockName = stockName;
+            this.stockPrice = stockPrice;
+        }
 
         // Copy constructor
         // Preconditions:
