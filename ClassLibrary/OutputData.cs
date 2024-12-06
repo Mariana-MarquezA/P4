@@ -6,7 +6,6 @@
  * .NET Version: NET 8.0
  */
 
-using ClassLibrary;
 using System;
 
 namespace ClassLibrary
