@@ -5,7 +5,7 @@
  * Platform: Windows Vista 2022
  * .NET Version: NET 8.0
  */
-using ClassLibrary;
+
 using System;
 
 namespace ClassLibrary
@@ -27,12 +27,12 @@ public class OrderDetail
         * - quantity must be positive, greater than 0
         */
 
-        private int orderNumber;
-        private int detailNumber;
-        private string stockID;
-        private string stockName;
-        private double stockPrice;
-        private int quantity;
+        internal int orderNumber;
+        internal int detailNumber;
+        internal string stockID;
+        internal string stockName;
+        internal double stockPrice;
+        internal int quantity;
 
         // Preconditions:
         // - stockID must be non-empty 

@@ -6,16 +6,27 @@
  * .NET Version: NET 8.0
  */
 
+// using System.Reflection;
+using System.Text.Json;
+
 namespace ClassLibrary
 {
     // Implements OutputData interface to write order data to a JSON file.
     public class JSON : OutputData
     {
         // Preconditions:
-        // - order must not be null or empty
+        // - order must not be null 
         // Postconditions:
         // - Order data is saved to the JSON file.
-        public void Write(Order order) { }
-        
+        public void Write(Order order)
+        {
+            if (order == null)
+            {
+                throw new ArgumentNullException("Order must not be null");
+            }
+            string fileName = "order.json";
+            string jsonData = JsonSerializer.Serialize(order);
+            File.WriteAllText(fileName, jsonData);
+        }
     }
 }

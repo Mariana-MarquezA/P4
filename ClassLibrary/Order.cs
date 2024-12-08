@@ -27,13 +27,13 @@ namespace ClassLibrary
     // - orderDetails must contain at least one OrderDetail object
 
     {
-        private int orderNumber;
-        private DateTime dateTime;
-        private string customerName;
-        private string customerPhone;
-        private double taxAmount;
-        private double totalAmount;
-        private List<OrderDetail> orderDetails;
+        internal int orderNumber;
+        internal DateTime dateTime;
+        internal string customerName;
+        internal string customerPhone;
+        internal double taxAmount;
+        internal double totalAmount;
+        internal List<OrderDetail> orderDetails;
 
         // Preconditions:
         // - customerName must be a non-empty
