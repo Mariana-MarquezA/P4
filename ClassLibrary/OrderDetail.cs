@@ -45,9 +45,9 @@ public class OrderDetail
         // - orderNumber, detailNumber and quantity are initialized to default values
         public OrderDetail(string stockID, string stockName, double stockPrice)
         {
-            if (stockID == null || stockID == "")
+            if (string.IsNullOrEmpty(stockID))
                 throw new ArgumentException("Stock ID must not be empty.");
-            if (stockName == null || stockName == "")
+            if (string.IsNullOrEmpty(stockName))
                 throw new ArgumentException("Stock Name must not be empty.");
             if (stockPrice < 0)
                 throw new ArgumentOutOfRangeException("Stock Price must be non-negative");
@@ -104,7 +104,7 @@ public class OrderDetail
             }
             set 
             {
-                if (value <= 1) 
+                if (value < 1) 
                 {
                     throw new ArgumentOutOfRangeException("detailNumber must be 1 or greater");
                 }
