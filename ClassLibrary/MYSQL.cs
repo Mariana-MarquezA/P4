@@ -11,14 +11,9 @@ using System.Data.SQLite;
 namespace ClassLibrary
 {
     // Implements OutputData interface to write order data to a MySQL database
-    public class MYSQL : OutputData
+    public class MYSQL(string connectString) : OutputData
     {
-        private readonly string _connectString;
-
-        public MYSQL(string connectString)
-        {
-            _connectString = connectString;
-        }
+        private readonly string _connectString = connectString;
 
         // Preconditions:
         // - order must not be null
@@ -43,7 +38,7 @@ namespace ClassLibrary
         
         // Postconditions:
         // - Creates Order and OrderDetail tables if they do not exist       
-        private void CreateTables(SQLiteConnection connection) {
+        static void CreateTables(SQLiteConnection connection) {
             SQLiteCommand sqlite_cmd;
 
             string createOrderTable = @"CREATE TABLE IF NOT EXISTS Orders (
@@ -71,7 +66,7 @@ namespace ClassLibrary
             sqlite_cmd.ExecuteNonQuery();
         }
 
-        private void InsertOrder(SQLiteConnection connection, Order order) {
+        static void InsertOrder(SQLiteConnection connection, Order order) {
             SQLiteCommand command = connection.CreateCommand();
             command.CommandText = @"INSERT INTO Orders (orderNumber, dateTime, customerName, customerPhone, taxAmount, totalAmount)
                                     VALUES (@orderNumber, @dateTime, @customerName, @customerPhone, @taxAmount, @totalAmount)";

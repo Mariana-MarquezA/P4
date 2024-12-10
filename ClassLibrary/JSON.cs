@@ -12,14 +12,9 @@ using System.Text.Json;
 namespace ClassLibrary
 {
     // Implements OutputData interface to write order data to a JSON file.
-    public class JSON : OutputData
+    public class JSON(string filePath) : OutputData
     {
-        private readonly string _filePath;
-
-        public JSON(string filePath)
-        {
-            _filePath = filePath;
-        }
+        private readonly string _filePath = filePath;
 
         // Preconditions:
         // - order must not be null 

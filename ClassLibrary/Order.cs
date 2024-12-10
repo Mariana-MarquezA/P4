@@ -45,7 +45,7 @@ namespace ClassLibrary
             this.customerPhone = customerPhone;
             dateTime = DateTime.Now;
             orderNumber = GenerateUniqueOrderNumber();
-            orderDetails = new List<OrderDetail>();
+            orderDetails = [];
             taxAmount = 0.0;
             totalAmount = 0.0;
         }

@@ -12,10 +12,9 @@ using System.Linq.Expressions;
 namespace ClassLibrary
 {
     // Creates instances of OutputData implementations based on database status
-    public class OutputDataFactory
+    public class OutputDataFactory(string connectionString)
     {
-        private readonly string _connectString;
-        public OutputDataFactory(string connectionString) => _connectString = connectionString;
+        private readonly string _connectString = connectionString;
 
         private bool IsDatabaseUp()
         {
