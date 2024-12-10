@@ -13,19 +13,30 @@ namespace ClassLibrary
     // Implements OutputData interface to write order data to a MySQL database
     public class MYSQL : OutputData
     {
+        private readonly string _connectString;
+
+        public MYSQL(string connectString)
+        {
+            _connectString = connectString;
+        }
+
         // Preconditions:
         // - order must not be null
-        // - There must be a connection with MySQL database
+        // - There must be a connection with SQLite database
         // Postconditions:
-        // - Order data is written to the MySQL database.
+        // - Order data is written to the SQLite database.
         public void Write(Order order) {
             if (order == null) {
                 throw new ArgumentNullException("Order must not be null");
             }
+
+            SQLiteConnection connection = CreateConnection();
+            CreateTables(connection);
+            InsertOrder(connection, order);
         }
 
         private SQLiteConnection CreateConnection() { 
-            SQLiteConnection connection = new SQLiteConnection("Data Source=orders.db;Version=3;");
+            SQLiteConnection connection = new (_connectString);
             connection.Open();
             return connection;
         }

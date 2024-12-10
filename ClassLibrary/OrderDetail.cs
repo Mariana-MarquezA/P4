@@ -1,12 +1,13 @@
 ﻿/* Author:   Mariana Marquez
  * Date:     11/25/2024
- * Version:  1.0
+ * Version:  2.0
  * Filename: OrderDetails.cs
  * Platform: Windows Vista 2022
  * .NET Version: NET 8.0
  */
 
 using System;
+using System.Configuration;
 
 namespace ClassLibrary
 {
@@ -27,20 +28,24 @@ public class OrderDetail
         * - quantity must be positive, greater than 0
         */
 
-        internal int orderNumber;
-        internal int detailNumber;
+        private readonly double _taxFactor = 0.10;
+        private readonly double _electronicsTariff = 0.05;
         internal string stockID;
         internal string stockName;
         internal double stockPrice;
+        internal int orderNumber;
+        internal int detailNumber;
         internal int quantity;
 
+        // OrderDetail constructor
         // Preconditions:
         // - stockID must be non-empty 
         // - stockName must be non-empty 
         // - stockPrice must be non-negative.
         // Postconditions:
         // - orderNumber, detailNumber and quantity are initialized to default values
-        public OrderDetail(string stockID, string stockName, double stockPrice){
+        public OrderDetail(string stockID, string stockName, double stockPrice)
+        {
             if (stockID == null || stockID == "")
                 throw new ArgumentException("Stock ID must not be empty.");
             if (stockName == null || stockName == "")
@@ -48,7 +53,7 @@ public class OrderDetail
             if (stockPrice < 0)
                 throw new ArgumentOutOfRangeException("Stock Price must be non-negative");
 
-            this.stockID = stockID; 
+            this.stockID = stockID;
             this.stockName = stockName;
             this.stockPrice = stockPrice;
             orderNumber = -1;
@@ -59,7 +64,8 @@ public class OrderDetail
         // Copy constructor
         // Preconditions:
         // - 'other' orderDetail object must not be null.
-        public OrderDetail(OrderDetail other) { 
+        public OrderDetail(OrderDetail other)
+        {
             orderNumber = other.orderNumber;
             detailNumber = other.detailNumber;
             stockID = other.stockID;
@@ -67,42 +73,88 @@ public class OrderDetail
             stockPrice = other.stockPrice;
             quantity = other.quantity;
         }
-        
+
         // Preconditions:
-        // - orderNumber must be positive
-        public void SetOrderNumber(int orderNumber){
-            if (orderNumber <= 0)
+        // orderNumber must be positive
+        internal int OrderNumber
+        {
+            get 
+            { 
+                return orderNumber; 
+            }
+            
+            set
             {
-                throw new ArgumentOutOfRangeException("Order number must be positive");
-            }
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException("Order number must be positive");
+                }
 
-            this.orderNumber = orderNumber; 
+                orderNumber = value;
+            }
+            
         }
 
-        public void SetDetailNumber(int detailNumber){
-            if (detailNumber <= 0) {
-                throw new ArgumentOutOfRangeException("Detail Number must be positive");
-            }
-
-            this.detailNumber = detailNumber;
-        }
-
-        public void SetQuantity(int quantity) {
-            if (quantity <= 0)
+        // Preconditions:
+        // - detailNumber must be greater or equal to one 
+        internal int DetailNumber 
+        {
+            get 
             {
-                throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+                return detailNumber;
             }
+            set 
+            {
+                if (value <= 1) 
+                {
+                    throw new ArgumentOutOfRangeException("detailNumber must be 1 or greater");
+                }
 
-            this.quantity = quantity;
+                detailNumber = value;
+            }        
         }
 
+        // Preconditions:
+        // - quantity must be greater than zero
+        internal int Quantity
+        {
+            get
+            {
+                return quantity;
+            }
+            
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+                }
+
+                quantity = value;
+            }
+        }
+       
         // Preconditions:
         // - quantity has been set to a different value than 0
         // - quantity must be positive
         // - orderNumber and detailNumber must have been set, indicating the object was added to an order
         // Postconditions:
         // - Returns the calculated amount based on stockPrice and quantity, with tariff applied if applicable.
-        public double CalculateAmountWithTariffs(){ return 0.0; }
+        internal double CalculateAmountWithTariffs()
+        {
+            if(orderNumber == -1 || detailNumber == -1)
+            {
+                throw new ArgumentException("Order detail must be added to an order");
+            }
+            
+            double finalPrice = stockPrice;
+            if (!string.IsNullOrEmpty(stockID) && stockID.Length >= 5 &&
+                stockID.Substring(0, 5).Equals("ELECT", StringComparison.OrdinalIgnoreCase))
+            {
+                finalPrice *= (1 + _electronicsTariff);
+            }
+            return finalPrice * quantity;
+        }
 
         public override string ToString() {
             return $"OrderDetail {{ {orderNumber}, {detailNumber}, {stockID}, {stockName}, {stockPrice}, {quantity}}}";

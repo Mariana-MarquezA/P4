@@ -14,7 +14,7 @@ namespace Driver
     public class Driver
     {
         public static void Main(string[] args) {
-            Order order0 = new Order("Pepper Jack", "832");
+            Order order0 = new ("Pepper Jack", "832");
 
             
         }

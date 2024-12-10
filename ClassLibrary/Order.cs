@@ -1,6 +1,6 @@
 ﻿/* Author:   Mariana Marquez
  * Date:     11/25/2024
- * Version:  1.0
+ * Version:  2.0
  * Filename: Order.cs
  * Platform: Windows Vista 2022
  * .NET Version: NET 8.0
@@ -34,6 +34,7 @@ namespace ClassLibrary
         internal double taxAmount;
         internal double totalAmount;
         internal List<OrderDetail> orderDetails;
+       
 
         // Preconditions:
         // - customerName must be a non-empty
@@ -68,12 +69,25 @@ namespace ClassLibrary
         // Postconditions:
         // - A new OrderDetail is added to orderDetails with the specified quantity,
         //   orderNumber, and detailNumber set
-        public void AddOrderDetail(OrderDetail orderDetail, int quantity) {
-            OrderDetail newDetail = new OrderDetail(orderDetail);
- 
-            newDetail.SetOrderNumber(this.orderNumber);
-            newDetail.SetDetailNumber(orderDetails.Count + 1);
-            newDetail.SetQuantity(quantity);
+        public void AddOrderDetail(OrderDetail orderDetail, int quantity)
+        {
+            if (orderDetail == null)
+            {
+                throw new ArgumentNullException("OrderDetail must not be null");
+            }
+
+            if (quantity <= 0)
+            {
+                throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+            }
+
+            OrderDetail newDetail = new (orderDetail)
+            {
+                Quantity = quantity,
+                OrderNumber = this.orderNumber,
+                DetailNumber = orderDetails.Count + 1,
+            };
+
             orderDetails.Add(newDetail);
         }
 
@@ -83,9 +97,17 @@ namespace ClassLibrary
         // Postconditions:
         // - Order is stored in the Database or JSON file based on database availability
         public void ProcessOrder() {
-            OutputDataFactory factory = new OutputDataFactory();
-            OutputData output = factory.CreateOutputData(true); 
-            output.Write(this);
+
+            if (orderDetails == null || orderDetails.Count == 0) 
+            {
+                throw new InvalidOperationException("Order must have one order detail at least");
+            }
+            
+            CalculateTotalAmount();
+
+            ApplyTax();
+
+            SaveOrder();
         }
 
         public override string ToString()
@@ -97,16 +119,48 @@ namespace ClassLibrary
         // Calculates the total amount of the order, sums up all order detail amounts.
         // Postconditions:
         // - totalAmount is updated with the total amount of the order
-        private void CalculateTotalAmount() { }
+        private void CalculateTotalAmount()
+        {
+            double sum = 0.0;
+
+            foreach (OrderDetail orderDetail in orderDetails)
+            {
+                sum += orderDetail.CalculateAmountWithTariffs();
+            }
+
+            totalAmount = sum;
+        }
 
         // Preconditions:
         // - totalAmount must be greater than 0   
         // Postconditions:
         // - taxAmount is set to 10% of totalAmount
         // - totalAmount is increased by taxAmount
-        private void ApplyTax() { }
+        private void ApplyTax() 
+        {
+            if (totalAmount < 0) 
+            {
+                throw new InvalidOperationException("Total amount must be greater than zero");
+            }
 
-        private int GenerateUniqueOrderNumber() { return 0; }
+            taxAmount = totalAmount *0.10;
+            totalAmount += taxAmount;
+        }
+
+        // Postconditions
+        // - Order is stored in database or JSON file depending on database availability 
+        private void SaveOrder() 
+        {
+            string connectString = "Data Source=orders.db;Version=3;";
+            OutputDataFactory outputFactory = new (connectString);
+            OutputData output = outputFactory.CreateOutputData();
+            output.Write(this);
+        }
+
+        private int GenerateUniqueOrderNumber() 
+        {
+            return Math.Abs(DateTime.Now.Ticks.GetHashCode());
+        }
 
     }
 }
