@@ -1,8 +1,16 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ClassLibrary;
+using System;
+using System.Collections.Generic;
+using NUnit.Framework;
+
 namespace TestProject1
 {
-    public class Tests
-    {
-        [SetUp]
+    
+        [TestClass]
+        public class TestOrderClassLibrary
+        {
+            [SetUp]
         public void Setup()
         {
         }

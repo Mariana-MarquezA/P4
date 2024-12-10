@@ -27,6 +27,7 @@ namespace ClassLibrary
     // - orderDetails must contain at least one OrderDetail object
 
     {
+        private readonly double _taxFactor = 0.10;
         internal int orderNumber;
         internal DateTime dateTime;
         internal string customerName;
@@ -143,7 +144,7 @@ namespace ClassLibrary
                 throw new InvalidOperationException("Total amount must be greater than zero");
             }
 
-            taxAmount = totalAmount *0.10;
+            taxAmount = totalAmount * _taxFactor;
             totalAmount += taxAmount;
         }
 

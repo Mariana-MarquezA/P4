@@ -28,7 +28,6 @@ public class OrderDetail
         * - quantity must be positive, greater than 0
         */
 
-        private readonly double _taxFactor = 0.10;
         private readonly double _electronicsTariff = 0.05;
         internal string stockID;
         internal string stockName;
