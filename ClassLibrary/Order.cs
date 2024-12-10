@@ -18,7 +18,8 @@ namespace ClassLibrary
     // Class invariants:
     // - OrderNumber must be unique and positive.
     // - dateTime must be valid
-    // - customerNmae must be non-empty
+    // - customerNmae must not be empty or null
+    // - customerPhone must not be empty or null
     // - customerPhone must have a valid phone format (10 digits)
     // - taxAmount must be non-negative
     // - Tariffs are first applied to the applicable items. Then total amount
@@ -34,13 +35,23 @@ namespace ClassLibrary
         internal string customerPhone;
         internal double taxAmount;
         internal double totalAmount;
+        internal double amountBeforeTax;
         internal List<OrderDetail> orderDetails;
        
 
         // Preconditions:
-        // - customerName must be a non-empty
-        // - customerPhone must be a non-empty 
+        // - customerName must not be empty or null
+        // - customerPhone must not be empty or null
         public Order(string customerName, string customerPhone) {
+            if (string.IsNullOrEmpty(customerName))
+            {
+                throw new ArgumentException("Customer Name must not be empty or null");
+            }
+            if (string.IsNullOrEmpty(customerPhone))
+            {
+                throw new ArgumentException("Customer Phone must not be empty or null");
+            }
+
             this.customerName = customerName;
             this.customerPhone = customerPhone;
             dateTime = DateTime.Now;
@@ -48,18 +59,23 @@ namespace ClassLibrary
             orderDetails = [];
             taxAmount = 0.0;
             totalAmount = 0.0;
+            amountBeforeTax = 0.0;
         }
 
         // Copy constructor
         // Preconditions:
         // - 'other' must not be null
         public Order(Order other) {
+            if (other == null) {
+                throw new ArgumentNullException("Cannot copy a null order");
+            }
             this.orderNumber = other.orderNumber;
             this.dateTime = other.dateTime;
             this.customerName = other.customerName;
             this.customerPhone = other.customerPhone;
             this.taxAmount = other.taxAmount;
             this.totalAmount = other.totalAmount;
+            this.amountBeforeTax = other.amountBeforeTax;
             orderDetails = new List<OrderDetail>(other.orderDetails);
         }
 
@@ -119,7 +135,7 @@ namespace ClassLibrary
 
         // Calculates the total amount of the order, sums up all order detail amounts.
         // Postconditions:
-        // - totalAmount is updated with the total amount of the order
+        // - amountBeforeTax is updated with the total amount of the order
         private void CalculateTotalAmount()
         {
             double sum = 0.0;
@@ -129,23 +145,23 @@ namespace ClassLibrary
                 sum += orderDetail.CalculateAmountWithTariffs();
             }
 
-            totalAmount = sum;
+            amountBeforeTax = sum;
         }
 
         // Preconditions:
-        // - totalAmount must be greater than 0   
+        // - amountBeforeTax must be greater than 0   
         // Postconditions:
-        // - taxAmount is set to 10% of totalAmount
-        // - totalAmount is increased by taxAmount
+        // - taxAmount is set to 10% of amountBeforeTax
+        // - totalAmount is set to the sum of amountBeforeTax and taxAmount
         private void ApplyTax() 
         {
-            if (totalAmount < 0) 
+            if (amountBeforeTax < 0) 
             {
                 throw new InvalidOperationException("Total amount must be greater than zero");
             }
 
-            taxAmount = totalAmount * _taxFactor;
-            totalAmount += taxAmount;
+            taxAmount = amountBeforeTax * _taxFactor;
+            totalAmount = amountBeforeTax + taxAmount;
         }
 
         // Postconditions

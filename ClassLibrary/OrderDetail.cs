@@ -46,9 +46,9 @@ public class OrderDetail
         public OrderDetail(string stockID, string stockName, double stockPrice)
         {
             if (string.IsNullOrEmpty(stockID))
-                throw new ArgumentException("Stock ID must not be empty.");
+                throw new ArgumentException("Stock ID must not be empty");
             if (string.IsNullOrEmpty(stockName))
-                throw new ArgumentException("Stock Name must not be empty.");
+                throw new ArgumentException("Stock Name must not be empty");
             if (stockPrice < 0)
                 throw new ArgumentOutOfRangeException("Stock Price must be non-negative");
 
