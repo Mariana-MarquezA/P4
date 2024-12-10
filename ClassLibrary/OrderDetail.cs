@@ -32,9 +32,9 @@ public class OrderDetail
         internal string stockID;
         internal string stockName;
         internal double stockPrice;
-        internal int orderNumber;
-        internal int detailNumber;
-        internal int quantity;
+        private int orderNumber;
+        private int detailNumber;
+        private int quantity;
 
         // OrderDetail constructor
         // Preconditions:
@@ -84,7 +84,7 @@ public class OrderDetail
             
             set
             {
-                if (value <= 0)
+                if (value < 1)
                 {
                     throw new ArgumentOutOfRangeException("Order number must be positive");
                 }

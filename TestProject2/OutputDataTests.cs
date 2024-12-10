@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace UnitTests
 {
-    internal class OutputDataTest
+    [TestClass]
+    public class OutputDataTests
     {
+
     }
 }
