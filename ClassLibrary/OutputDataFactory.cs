@@ -1,6 +1,6 @@
 ﻿/* Author:   Mariana Marquez
- * Date:     12/12/2024
- * Version:  3.0
+ * Date:     12/11/2024
+ * Version:  3.2
  * Filename: OutputDataFactory.cs
  * Platform: Windows Vista 2022
  * .NET Version: NET 8.0
@@ -12,31 +12,21 @@ using System.Linq.Expressions;
 namespace ClassLibrary
 {
     // Creates instances of OutputData implementations based on database status
-    public class OutputDataFactory(string connectionString)
-    {
-        private readonly string _connectString = connectionString;
+    public class OutputDataFactory {
+        private readonly string _connectString;
 
-        private bool IsDatabaseUp()
-        {
-            SQLiteConnection connection = new (_connectString);
-            try 
-            {
-                connection.Open();
-                connection.Close();
+        // Preconditions:
+        // - ConnectionString must not be empty nor null
+        public OutputDataFactory(string connectionString)  {
+            if (string.IsNullOrEmpty(connectionString)) {
+                throw new ArgumentException("Connection string must not be null or empty", nameof(connectionString));
+            }
 
-                return true;
-            }
-            catch (SQLiteException)
-            {
-                Console.WriteLine("Database is not available");
-                return false;
-            }
+            _connectString = connectionString;
         }
 
-        public OutputData CreateOutputData() 
-        {
-            if (IsDatabaseUp())
-            {
+        public OutputData CreateOutputData() {
+            if (IsDatabaseUp()) {
                 return new MYSQL(_connectString);
             }
             else {
@@ -45,5 +35,17 @@ namespace ClassLibrary
             }
         }
 
+        private bool IsDatabaseUp() {
+            SQLiteConnection connection = new(_connectString);
+            try {
+                connection.Open();
+                connection.Close();
+                return true;
+            }
+            catch (SQLiteException) {
+                Console.WriteLine("Database is not available");
+                return false;
+            }
+        }
     }
 }
