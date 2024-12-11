@@ -7,7 +7,6 @@
  */
 
 using System.Data.SQLite;
-using System.Linq.Expressions;
 
 namespace ClassLibrary
 {
@@ -27,7 +26,7 @@ namespace ClassLibrary
 
         public OutputData CreateOutputData() {
             if (IsDatabaseUp()) {
-                return new MYSQL(_connectString);
+                return new SQLite(_connectString);
             }
             else {
                 string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "orders.json");

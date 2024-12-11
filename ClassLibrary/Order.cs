@@ -85,6 +85,10 @@ namespace ClassLibrary
                 throw new ArgumentNullException("Cannot copy a null order");
             }
 
+            if (outputFactory == null) {
+                throw new ArgumentNullException("OutputDataFactory must not be null");
+            }
+
             this.orderNumber = other.orderNumber;
             this.dateTime = other.dateTime;
             this.customerName = other.customerName;
@@ -92,12 +96,12 @@ namespace ClassLibrary
             this.taxAmount = other.taxAmount;
             this.totalAmount = other.totalAmount;
             this.amountBeforeTax = other.amountBeforeTax;
-            orderDetails = new List<OrderDetail>(other.orderDetails);
-
-            OutputDataFactory? outFactory = outputFactory;
-            if (outputFactory == null) {
-                throw new ArgumentNullException("OutputDataFactory must not be null");
+            
+            this.orderDetails = new List<OrderDetail>();
+            foreach (var detail in other.orderDetails) {
+                this.orderDetails.Add(new OrderDetail(detail));
             }
+            
             _outputFactory = outputFactory;
         }
 

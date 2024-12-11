@@ -11,7 +11,7 @@ using System.Data.SQLite;
 namespace ClassLibrary
 {
     // Implements OutputData interface to write order data to a MySQL database
-    public class MYSQL(string connectString) : OutputData
+    public class SQLite(string connectString) : OutputData
     {
         private readonly string _connectString = connectString;
 

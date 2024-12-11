@@ -9,10 +9,19 @@ namespace UnitTests
         private const string TestDirectory = "TestOutput";
         private const string TestFilePath = "TestOutput/test_orders.json";
 
+        private OutputDataFactory _outputFactory;
+
         [TestInitialize]
         public void InitializeTest() {
             if (!Directory.Exists(TestDirectory)) {
                 Directory.CreateDirectory(TestDirectory);
+            }
+
+            string testConnectionString = "Data Source=test_orders.db;Version=3;";
+            _outputFactory = new OutputDataFactory(testConnectionString);
+
+            if (File.Exists("test_orders.db")) {
+                File.Delete("test_orders.db");
             }
 
             if (File.Exists(TestFilePath)) {
@@ -22,7 +31,10 @@ namespace UnitTests
 
         [TestCleanup]
         public void TestCleanup() {
-            
+            if (File.Exists("test_orders.db")) {
+                File.Delete("test_orders.db");
+            }
+
             if (File.Exists(TestFilePath)) {
                 File.Delete(TestFilePath);
             }
@@ -54,7 +66,7 @@ namespace UnitTests
         public void Write_ValidOrder_WritesToFile() {
             JSON jsonObject = new(TestFilePath);
 
-            Order order = new ("Billy Smith", "6780923750");
+            Order order = new ("Billy Smith", "6780923750", _outputFactory);
             OrderDetail item = new OrderDetail("ELECT001", "42 Inch TV", 300.00);
             order.AddOrderDetail(item, 1);
 
@@ -83,8 +95,8 @@ namespace UnitTests
             OrderDetail item1 = new("ELECT001", "42 Inch TV", 300.00);
             OrderDetail item2 = new("FURN001", "Sofa", 500.00);
 
-            Order order1 = new("Billy Smith", "6780923750");
-            Order order2 = new("Sara Wilkinson", "5678761426");
+            Order order1 = new("Billy Smith", "6780923750", _outputFactory);
+            Order order2 = new("Sara Wilkinson", "5678761426", _outputFactory);
 
             order1.AddOrderDetail(item1, 1);
             order1.AddOrderDetail(item2, 1);
@@ -108,7 +120,7 @@ namespace UnitTests
             string invalidFilePath = "X:\\Invalid\\Path\\test_orders.json"; // Invalid path
             JSON jsonObject = new(invalidFilePath);
 
-            Order order = new("Billy Smith", "6780923750");
+            Order order = new("Billy Smith", "6780923750", _outputFactory);
             OrderDetail item = new("ELECT001", "42 Inch TV", 300.00);
             order.AddOrderDetail(item, 1);
 
@@ -118,7 +130,7 @@ namespace UnitTests
         [TestMethod]
         public void Write_EmptyOrderDetails_WritesToFile() {
             JSON jsonObject = new(TestFilePath);
-            Order order = new Order("Billy Smith", "6780923750");
+            Order order = new Order("Billy Smith", "6780923750", _outputFactory);
             jsonObject.Write(order);
 
             Assert.IsTrue(File.Exists(TestFilePath));
@@ -137,7 +149,7 @@ namespace UnitTests
             // Create an invalid JSON file
             File.WriteAllText(TestFilePath, "{ }"); 
 
-            Order order = new("Billy Smith", "6780923750");
+            Order order = new("Billy Smith", "6780923750", _outputFactory);
             OrderDetail item = new("GARD003", "Lawn Mower", 500.00);
             order.AddOrderDetail(item, 2);
 
