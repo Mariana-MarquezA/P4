@@ -13,12 +13,25 @@ namespace Driver
 {
     public class Driver
     {
-        public static void Main(){ 
-        
-        }
-            
+        public static void Main(){
 
-            
-        
+            string dataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OrderSystem");
+            string JSONFilePath = Path.Combine(dataDirectory, "orders.json");
+
+            if (!Directory.Exists(dataDirectory))
+            {
+                Directory.CreateDirectory(dataDirectory);
+            }
+
+            JSON jsonObject = new(JSONFilePath);
+
+            Order order = new Order("Billy Smith", "6780923750");
+            OrderDetail detail = new OrderDetail("ELECT001", "42 Inch TV", 300.00);
+            order.AddOrderDetail(detail, 1);
+
+            jsonObject.Write(order);
+
+            Console.WriteLine("Order has been saved to: " + JSONFilePath);
+        } 
     }
 }

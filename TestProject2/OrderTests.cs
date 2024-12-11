@@ -95,7 +95,7 @@ namespace UnitTests
         public void ProcessOrder_OrderDetailsAdded_ProcessedSuccesfully() {
             Order order = new("Billy Smith", "6780923750");
             OrderDetail item1 = new("ELECT001", "42 Inch TV", 300.00);
-            OrderDetail item2 = new("FURN001", "Sofa", 500.00);
+            OrderDetail item2 = new("GARD003", "Lawn Mower", 500.00);
 
             order.AddOrderDetail(item1, 1);
             order.AddOrderDetail(item2, 1);

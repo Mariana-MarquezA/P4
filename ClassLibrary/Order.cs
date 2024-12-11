@@ -6,8 +6,7 @@
  * .NET Version: NET 8.0
  */
 
-using System;
-
+using System.Text.Json.Serialization;
 
 namespace ClassLibrary
 {
@@ -29,15 +28,20 @@ namespace ClassLibrary
 
     {
         private readonly double _taxFactor = 0.10;
-        internal int orderNumber;
-        internal DateTime dateTime;
-        internal string customerName;
-        internal string customerPhone;
-        internal double taxAmount;
-        internal double totalAmount;
         internal double amountBeforeTax;
-        internal List<OrderDetail> orderDetails;
-       
+        [JsonInclude] internal int orderNumber;
+        [JsonInclude] internal DateTime dateTime;
+        [JsonInclude] internal string customerName;
+        [JsonInclude] internal string customerPhone;
+        [JsonInclude] internal double taxAmount;
+        [JsonInclude] internal double totalAmount;
+        
+        [JsonInclude] internal List<OrderDetail> orderDetails;
+
+        // Necessary for deserialization
+        public Order() {
+            orderDetails = new List<OrderDetail>();
+        }
 
         // Preconditions:
         // - customerName must not be empty or null
@@ -56,7 +60,7 @@ namespace ClassLibrary
             this.customerPhone = customerPhone;
             dateTime = DateTime.Now;
             orderNumber = GenerateUniqueOrderNumber();
-            orderDetails = [];
+            orderDetails = new List<OrderDetail>();
             taxAmount = 0.0;
             totalAmount = 0.0;
             amountBeforeTax = 0.0;

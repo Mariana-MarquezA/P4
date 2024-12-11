@@ -130,7 +130,7 @@ namespace UnitTests
         [TestMethod]
         public void CalculateAmountWithTariffs_NoElectTarrifApplied()
         {
-            OrderDetail item = new("FURN001", "Sofa", 500.00)
+            OrderDetail item = new("FURN001", "Office Chair", 250.00)
             {
                 // Assume item has been added to an Order
                 Quantity = 2,
@@ -139,7 +139,7 @@ namespace UnitTests
             };
 
             double result = item.CalculateAmountWithTariffs();
-            Assert.AreEqual(1000.00, result);
+            Assert.AreEqual(500.00, result);
         }
 
         [TestMethod]

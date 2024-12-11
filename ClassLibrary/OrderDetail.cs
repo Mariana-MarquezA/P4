@@ -8,33 +8,35 @@
 
 using System;
 using System.Configuration;
+using System.Text.Json.Serialization;
 
 namespace ClassLibrary
 {
  
-// Represents an item or order line in an order, including attributes and information 
-// Allowins initialization without orderNumber, detailNumber, or quantity.
-// Once these properties are set after  to anbeing added to an order,
-// the CalculateAmountWithTariffs method can be used.
+/* Represents an item or order line in an order, including attributes and information 
+ * Allowins initialization without orderNumber, detailNumber, or quantity.
+ * Once these properties are set after  to anbeing added to an order,
+ * the CalculateAmountWithTariffs method can be used.
+ */
 
 public class OrderDetail
     {
         /* Class invariants:
-        * - orderNumber must be a positive integer, unique to each order.
-        * - detailNumber must be a positive integer, starting from 1 and incrementing by 1 for each detail.
-        * - stockID must be valid and non-empty 
-        * - stockName must be valid and non-empty
-        * - stockPrice must be non-negative
-        * - quantity must be positive, greater than 0
-        */
+         * - orderNumber must be a positive integer, unique to each order.
+         * - detailNumber must be a positive integer, starting from 1 and incrementing by 1 for each detail.
+         * - stockID must be valid and non-empty 
+         * - stockName must be valid and non-empty
+         * - stockPrice must be non-negative
+         * - quantity must be positive, greater than 0
+         */
 
         private readonly double _electronicsTariff = 0.05;
-        internal string stockID;
-        internal string stockName;
-        internal double stockPrice;
-        private int orderNumber;
-        private int detailNumber;
-        private int quantity;
+        [JsonInclude] internal string stockID;
+        [JsonInclude] internal string stockName;
+        [JsonInclude] internal double stockPrice;
+        [JsonInclude] internal int orderNumber;
+        [JsonInclude] internal int detailNumber;
+        [JsonInclude] internal int quantity;
 
         // OrderDetail constructor
         // Preconditions:
@@ -43,6 +45,17 @@ public class OrderDetail
         // - stockPrice must be non-negative.
         // Postconditions:
         // - orderNumber, detailNumber and quantity are initialized to default values
+
+        // Necessary for deserialization
+        public OrderDetail() {
+            stockID = string.Empty;
+            stockName = string.Empty;
+            stockPrice = 0.0;
+            orderNumber = -1;
+            detailNumber = -1;
+            quantity = -1;
+        }
+        
         public OrderDetail(string stockID, string stockName, double stockPrice)
         {
             if (string.IsNullOrEmpty(stockID))
@@ -65,6 +78,10 @@ public class OrderDetail
         // - 'other' orderDetail object must not be null.
         public OrderDetail(OrderDetail other)
         {
+            if (other == null)
+            {
+                throw new ArgumentNullException("Cannot copy a null order detail");
+            }
             orderNumber = other.orderNumber;
             detailNumber = other.detailNumber;
             stockID = other.stockID;
@@ -75,6 +92,7 @@ public class OrderDetail
 
         // Preconditions:
         // orderNumber must be positive
+        [JsonInclude]
         internal int OrderNumber
         {
             get 
@@ -96,6 +114,7 @@ public class OrderDetail
 
         // Preconditions:
         // - detailNumber must be greater or equal to one 
+        [JsonInclude]
         internal int DetailNumber 
         {
             get 
@@ -115,6 +134,7 @@ public class OrderDetail
 
         // Preconditions:
         // - quantity must be greater than zero
+        [JsonInclude]
         internal int Quantity
         {
             get
