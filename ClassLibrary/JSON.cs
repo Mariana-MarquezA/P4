@@ -75,7 +75,7 @@ namespace ClassLibrary
             }
 
             string existingOrders = File.ReadAllText(_filePath);
-            if (string.IsNullOrWhiteSpace(existingOrders)){
+            if (string.IsNullOrWhiteSpace(existingOrders)) {
                 return new List<Order>();
             }
 

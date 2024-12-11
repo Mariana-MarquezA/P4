@@ -56,14 +56,18 @@ public class OrderDetail
             quantity = -1;
         }
         
-        public OrderDetail(string stockID, string stockName, double stockPrice)
-        {
-            if (string.IsNullOrEmpty(stockID))
+        public OrderDetail(string stockID, string stockName, double stockPrice) {
+            if (string.IsNullOrEmpty(stockID)) {
                 throw new ArgumentException("Stock ID must not be empty");
-            if (string.IsNullOrEmpty(stockName))
+            }
+
+            if (string.IsNullOrEmpty(stockName)) {
                 throw new ArgumentException("Stock Name must not be empty");
-            if (stockPrice < 0)
+            }
+
+            if (stockPrice < 0) {
                 throw new ArgumentOutOfRangeException("Stock Price must be non-negative");
+            }
 
             this.stockID = stockID;
             this.stockName = stockName;
@@ -76,12 +80,11 @@ public class OrderDetail
         // Copy constructor
         // Preconditions:
         // - 'other' orderDetail object must not be null.
-        public OrderDetail(OrderDetail other)
-        {
-            if (other == null)
-            {
+        public OrderDetail(OrderDetail other) {
+            if (other == null) {
                 throw new ArgumentNullException("Cannot copy a null order detail");
             }
+
             orderNumber = other.orderNumber;
             detailNumber = other.detailNumber;
             stockID = other.stockID;
@@ -93,17 +96,13 @@ public class OrderDetail
         // Preconditions:
         // orderNumber must be positive
         [JsonInclude]
-        internal int OrderNumber
-        {
-            get 
-            { 
+        internal int OrderNumber {
+            get { 
                 return orderNumber; 
             }
             
-            set
-            {
-                if (value < 1)
-                {
+            set {
+                if (value < 1) {
                     throw new ArgumentOutOfRangeException("Order number must be positive");
                 }
 
@@ -115,16 +114,13 @@ public class OrderDetail
         // Preconditions:
         // - detailNumber must be greater or equal to one 
         [JsonInclude]
-        internal int DetailNumber 
-        {
-            get 
-            {
+        internal int DetailNumber {
+            get {
                 return detailNumber;
             }
-            set 
-            {
-                if (value < 1) 
-                {
+
+            set {
+                if (value < 1) {
                     throw new ArgumentOutOfRangeException("detailNumber must be 1 or greater");
                 }
 
@@ -135,15 +131,12 @@ public class OrderDetail
         // Preconditions:
         // - quantity must be greater than zero
         [JsonInclude]
-        internal int Quantity
-        {
-            get
-            {
+        internal int Quantity {
+            get {
                 return quantity;
             }
             
-            set
-            {
+            set {
                 if (value <= 0)
                 {
                     throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
@@ -159,19 +152,18 @@ public class OrderDetail
         // - orderNumber and detailNumber must have been set, indicating the object was added to an order
         // Postconditions:
         // - Returns the calculated amount based on stockPrice and quantity, with tariff applied if applicable.
-        internal double CalculateAmountWithTariffs()
-        {
-            if(orderNumber == -1 || detailNumber == -1)
-            {
+        internal double CalculateAmountWithTariffs() {
+            if (orderNumber == -1 || detailNumber == -1) {
                 throw new ArgumentException("Order detail must be added to an order");
             }
             
             double finalPrice = stockPrice;
             if (!string.IsNullOrEmpty(stockID) && stockID.Length >= 5 &&
-                stockID.Substring(0, 5).Equals("ELECT", StringComparison.OrdinalIgnoreCase))
-            {
+                stockID.Substring(0, 5).Equals("ELECT", StringComparison.OrdinalIgnoreCase)) { 
+                    
                 finalPrice *= (1 + _electronicsTariff);
             }
+            
             return finalPrice * quantity;
         }
 

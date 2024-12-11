@@ -8,8 +8,7 @@ namespace UnitTests
     public class OrderDetailTests
     {
         [TestMethod]
-        public void Constructor_ValidArguments_ValidInstantiation()
-        {
+        public void Constructor_ValidArguments_ValidInstantiation() {
             OrderDetail item = new("ELECT001", "42 Inch TV", 300.00);
             Assert.AreEqual("ELECT001", item.stockID);
             Assert.AreEqual("42 Inch TV", item.stockName);
@@ -21,36 +20,31 @@ namespace UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_EmptyStockID_ThrowsException()
-        {
+        public void Constructor_EmptyStockID_ThrowsException() {
             OrderDetail item = new("", "42 Inch TV", 300.00);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_NullStockID_ThrowsException()
-        {
+        public void Constructor_NullStockID_ThrowsException() {
             OrderDetail item = new(null, "42 Inch TV", 300.00);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_EmptyStockName_ThrowsException()
-        {
+        public void Constructor_EmptyStockName_ThrowsException() {
             OrderDetail item = new("ELECT001", "", 300.00);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_NullStockName_ThrowsException()
-        {
+        public void Constructor_NullStockName_ThrowsException() {
             OrderDetail item = new("ELECT001", null, 300.00);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Constructor_NegativeStockPrice_ThrowsException()
-        {
+        public void Constructor_NegativeStockPrice_ThrowsException() {
             OrderDetail item = new("ELECT001", "42 Inch TV", -300.00);
         }
 
@@ -90,8 +84,7 @@ namespace UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void DetailNumberProperty_NegativeValue_ThrowsException()
-        {
+        public void DetailNumberProperty_NegativeValue_ThrowsException() {
             OrderDetail item = new("ELECT001", "42 Inch TV", 300.00);
             item.DetailNumber = 0;
         }
@@ -105,16 +98,14 @@ namespace UnitTests
 
         [TestMethod]
         [ExpectedException (typeof(ArgumentOutOfRangeException))]
-        public void QuantityProperty_InvalidValue_ThrowsEsception()
-        {
+        public void QuantityProperty_InvalidValue_ThrowsEsception() {
             OrderDetail item = new("ELECT001", "42 Inch TV", 300.00);
             item.Quantity = 0;
         }
 
 
         [TestMethod]
-        public void CalculateAmountWithTariffs_ElectTarrifApplied()
-        {
+        public void CalculateAmountWithTariffs_ElectTarrifApplied() {
             OrderDetail item = new("ELECT001", "42 Inch TV", 300.00)
             {
                 // Assume item has been added to an Order
@@ -128,8 +119,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void CalculateAmountWithTariffs_NoElectTarrifApplied()
-        {
+        public void CalculateAmountWithTariffs_NoElectTarrifApplied() {
             OrderDetail item = new("FURN001", "Office Chair", 250.00)
             {
                 // Assume item has been added to an Order
@@ -144,8 +134,7 @@ namespace UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void CalculateAmountWithTariffs_NotAddedToOrder_ThrowsException()
-        {
+        public void CalculateAmountWithTariffs_NotAddedToOrder_ThrowsException() {
             OrderDetail item = new("ELECT001", "42 Inch TV", 300.00) {
                 Quantity = 1
             };

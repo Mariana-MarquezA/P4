@@ -7,8 +7,7 @@ namespace UnitTests
     public class OrderTests
     {
         [TestMethod]
-        public void Constructor_ValidArguments_ValidInstantiation()
-        {
+        public void Constructor_ValidArguments_ValidInstantiation() {
             Order order = new("Billy Smith", "6780923750");
             Assert.AreEqual("Billy Smith", order.customerName);
             Assert.AreEqual("6780923750", order.customerPhone);
@@ -19,8 +18,7 @@ namespace UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_EmptyCustomerName_ThrowsException()
-        {
+        public void Constructor_EmptyCustomerName_ThrowsException() {
             Order order = new("", "6780923750");
         }
 
@@ -64,8 +62,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void AddDetail_ValidDetail_Added()
-        {
+        public void AddDetail_ValidDetail_Added() {
             Order order = new("Billy Smith", "6780923750");
             OrderDetail item = new("ELECT001", "42 Inch TV", 300.00);
             order.AddOrderDetail(item, 2);
@@ -109,14 +106,12 @@ namespace UnitTests
         
         [TestMethod]
         [ExpectedException (typeof(InvalidOperationException))]
-        public void ProcessOrder_NoOrderDetails_ThrowsException()
-        {
-
+        public void ProcessOrder_NoOrderDetails_ThrowsException() {
             Order order = new("John Jenkins", "2533124578");
             order.ProcessOrder();
         }
 
-        /*
+        
         [TestMethod]
         public void ToString_ReturnsFormattedString() {
             Order order = new("John Jenkins", "2533124578");
@@ -126,9 +121,5 @@ namespace UnitTests
 
             string formatted = order.ToString();
         }
-
-        */
-
-
     }
 }
