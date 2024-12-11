@@ -8,29 +8,26 @@
 
 using System.Text.Json.Serialization;
 
-namespace ClassLibrary
-{
+namespace ClassLibrary {
     // Represents a customer order containing multiple order details
     // Processes orders
     // Once an order has been processed, it is stored using
     //    JSON file or database depending on availability 
     // Order uses OutputDataFactory instances to determine the storage mechanism
 
-    public class Order
+    public class Order { 
+        // Class invariants:
+        // - OrderNumber must be unique and positive.
+        // - dateTime must be valid
+        // - customerNmae must not be empty or null
+        // - customerPhone must not be empty or null
+        // - customerPhone must have a valid phone format (10 digits)
+        // - taxAmount must be non-negative
+        // - Tariffs are first applied to the applicable items. Then total amount
+        //   is calculated and tax is apllied. 
+        // - TotalAmount must be non-negative
+        // - orderDetails must contain at least one OrderDetail object
 
-    // Class invariants:
-    // - OrderNumber must be unique and positive.
-    // - dateTime must be valid
-    // - customerNmae must not be empty or null
-    // - customerPhone must not be empty or null
-    // - customerPhone must have a valid phone format (10 digits)
-    // - taxAmount must be non-negative
-    // - Tariffs are first applied to the applicable items. Then total amount
-    //   is calculated and tax is apllied. 
-    // - TotalAmount must be non-negative
-    // - orderDetails must contain at least one OrderDetail object
-
-    {
         private readonly double _taxFactor = 0.10;
         private readonly OutputDataFactory _outputFactory;
         internal double amountBeforeTax;

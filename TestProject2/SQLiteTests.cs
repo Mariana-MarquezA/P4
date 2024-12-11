@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnitTests
 {
-    [TestClass]
-    public class OutputDataTests
+    internal class SQLiteTests
     {
-
     }
 }

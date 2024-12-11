@@ -8,15 +8,14 @@
 
 using System.Text.Json;
 
-namespace ClassLibrary
-{
+namespace ClassLibrary {
     // Implements OutputData interface to write order data to a JSON file.
-    public class JSON : OutputData
-    /* Class invariants:
-     * - filePath must be a valid and non-empty string referencing JSON file
-     * - if JSON file exists, file must contain a valid or empty JSON array of Order objects
-     */
-    {
+    public class JSON : OutputData { 
+       /* Class invariants:
+        * - filePath must be a valid and non-empty string referencing JSON file
+        * - if JSON file exists, file must contain a valid or empty JSON array of Order objects
+        */
+   
         private string _filePath;
 
         // Constructor

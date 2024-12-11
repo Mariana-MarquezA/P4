@@ -11,8 +11,7 @@ using System;
 namespace ClassLibrary
 {
     // Interface for output operations
-    public interface OutputData
-    {
+    public interface OutputData {
         // Writes order data to an output medium
         void Write(Order order);
     }

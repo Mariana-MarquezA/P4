@@ -6,12 +6,9 @@
  * .NET Version: NET 8.0
  */
 
-using System;
-using System.Configuration;
 using System.Text.Json.Serialization;
 
-namespace ClassLibrary
-{
+namespace ClassLibrary {
  
 /* Represents an item or order line in an order, including attributes and information 
  * Allowins initialization without orderNumber, detailNumber, or quantity.
@@ -19,16 +16,15 @@ namespace ClassLibrary
  * the CalculateAmountWithTariffs method can be used.
  */
 
-public class OrderDetail
-    {
-        /* Class invariants:
-         * - orderNumber must be a positive integer, unique to each order.
-         * - detailNumber must be a positive integer, starting from 1 and incrementing by 1 for each detail.
-         * - stockID must be valid and non-empty 
-         * - stockName must be valid and non-empty
-         * - stockPrice must be non-negative
-         * - quantity must be positive, greater than 0
-         */
+    public class OrderDetail {
+       /* Class invariants:
+        * - orderNumber must be a positive integer, unique to each order.
+        * - detailNumber must be a positive integer, starting from 1 and incrementing by 1 for each detail.
+        * - stockID must be valid and non-empty 
+        * - stockName must be valid and non-empty
+        * - stockPrice must be non-negative
+        * - quantity must be positive, greater than 0
+        */
 
         private readonly double _electronicsTariff = 0.05;
         [JsonInclude] internal string stockID;
