@@ -1,5 +1,5 @@
 ﻿/* Author:   Mariana Marquez
- * Date:     11/25/2024
+ * Date:     12/11/2024
  * Version:  2.0
  * Filename: MYSQL.cs
  * Platform: Windows Vista 2022
@@ -11,9 +11,35 @@ using System.Data.SQLite;
 namespace ClassLibrary
 {
     // Implements OutputData interface to write order data to a MySQL database
-    public class SQLite(string connectString) : OutputData
+    public class SQLite: OutputData
     {
-        private readonly string _connectString = connectString;
+        private readonly string _connectString;
+
+        // Preconditions:
+        // - connectString must not be null or empty
+        public SQLite(string connectString) {
+            if (string.IsNullOrEmpty(connectString)) {
+                throw new ArgumentException("Connection string must not be null or empty");
+            }
+
+            _connectString = connectString;
+        }
+
+        public int GetMaxOrderNumber(SQLiteConnection connection)
+        {
+            string query = "SELECT MAX(orderNumber) FROM Orders;";
+            using (SQLiteCommand command = new SQLiteCommand(query, connection))
+            {
+                object result = command.ExecuteScalar();
+                if (result != DBNull.Value && result != null) {
+                    return Convert.ToInt32(result);
+                }
+                else {
+                    return 999;
+                }
+            }
+        }
+
 
         // Preconditions:
         // - order must not be null
@@ -28,9 +54,11 @@ namespace ClassLibrary
             SQLiteConnection connection = CreateConnection();
             CreateTables(connection);
             InsertOrder(connection, order);
+            InsertOrderDetails(connection, order);
+            Console.WriteLine($"Inserted Order #{order.orderNumber} and its details into the database");
         }
 
-        private SQLiteConnection CreateConnection() { 
+        public SQLiteConnection CreateConnection() { 
             SQLiteConnection connection = new (_connectString);
             connection.Open();
             return connection;
@@ -66,17 +94,43 @@ namespace ClassLibrary
             sqlite_cmd.ExecuteNonQuery();
         }
 
-        static void InsertOrder(SQLiteConnection connection, Order order) {
+        static void InsertOrder(SQLiteConnection connection, Order order)
+        {
             SQLiteCommand command = connection.CreateCommand();
             command.CommandText = @"INSERT INTO Orders (orderNumber, dateTime, customerName, customerPhone, taxAmount, totalAmount)
-                                    VALUES (@orderNumber, @dateTime, @customerName, @customerPhone, @taxAmount, @totalAmount)";
+                            VALUES (@orderNumber, @dateTime, @customerName, @customerPhone, @taxAmount, @totalAmount)";
             command.Parameters.AddWithValue("@orderNumber", order.orderNumber);
-            command.Parameters.AddWithValue("@dateTime", order.dateTime);
+            command.Parameters.AddWithValue("@dateTime", order.dateTime.ToString("yyyy-MM-dd HH:mm:ss"));
             command.Parameters.AddWithValue("@customerName", order.customerName);
             command.Parameters.AddWithValue("@customerPhone", order.customerPhone);
             command.Parameters.AddWithValue("@taxAmount", order.taxAmount);
             command.Parameters.AddWithValue("@totalAmount", order.totalAmount);
             command.ExecuteNonQuery();
+        }
+
+
+        private void InsertOrderDetails(SQLiteConnection connection, Order order)
+        {
+            string insertDetailQuery = @"INSERT INTO OrderDetails (orderNumber, detailNumber, stockID, stockName, stockPrice, quantity)
+                                         VALUES (@orderNumber, @detailNumber, @stockID, @stockName, @stockPrice, @quantity);";
+
+            SQLiteTransaction transaction = connection.BeginTransaction();
+            SQLiteCommand command = new SQLiteCommand(insertDetailQuery, connection);    
+                foreach (var detail in order.orderDetails)
+                {
+                    command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@orderNumber", order.orderNumber);
+                    command.Parameters.AddWithValue("@detailNumber", detail.detailNumber);
+                    command.Parameters.AddWithValue("@stockID", detail.stockID);
+                    command.Parameters.AddWithValue("@stockName", detail.stockName);
+                    command.Parameters.AddWithValue("@stockPrice", detail.stockPrice);
+                    command.Parameters.AddWithValue("@quantity", detail.quantity);
+
+                    command.ExecuteNonQuery();
+                }
+            
+            transaction.Commit();
+            
         }
     }
 }

@@ -39,6 +39,7 @@ namespace ClassLibrary
             try {
                 connection.Open();
                 connection.Close();
+                Console.WriteLine("Connected to SQLite database successfully");
                 return true;
             }
             catch (SQLiteException) {

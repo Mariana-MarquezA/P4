@@ -15,7 +15,7 @@ namespace ClassLibrary {
     //    JSON file or database depending on availability 
     // Order uses OutputDataFactory instances to determine the storage mechanism
 
-    public class Order { 
+    public class Order {
         // Class invariants:
         // - OrderNumber must be unique and positive.
         // - dateTime must be valid
@@ -28,6 +28,7 @@ namespace ClassLibrary {
         // - TotalAmount must be non-negative
         // - orderDetails must contain at least one OrderDetail object
 
+        private static int lastOrderNumber = 1000;
         private readonly double _taxFactor = 0.10;
         private readonly OutputDataFactory _outputFactory;
         internal double amountBeforeTax;
@@ -59,7 +60,7 @@ namespace ClassLibrary {
             this.customerName = customerName;
             this.customerPhone = customerPhone;
             dateTime = DateTime.Now;
-            orderNumber = GenerateUniqueOrderNumber();
+            orderNumber = ++lastOrderNumber;
             orderDetails = new List<OrderDetail>();
             taxAmount = 0.0;
             totalAmount = 0.0;
@@ -86,8 +87,8 @@ namespace ClassLibrary {
                 throw new ArgumentNullException("OutputDataFactory must not be null");
             }
 
-            this.orderNumber = other.orderNumber;
-            this.dateTime = other.dateTime;
+            this.orderNumber = ++lastOrderNumber;
+            this.dateTime = DateTime.Now;
             this.customerName = other.customerName;
             this.customerPhone = other.customerPhone;
             this.taxAmount = other.taxAmount;
@@ -146,7 +147,7 @@ namespace ClassLibrary {
             string details = string.Join("\n", orderDetails);
             return $"Order {{{orderNumber}, {dateTime}, {customerName}, {customerPhone}, {taxAmount}, {totalAmount}}}\n{details}";
         }
-
+               
         // Calculates the total amount of the order, sums up all order detail amounts.
         // Postconditions:
         // - amountBeforeTax is updated with the total amount of the order
@@ -183,10 +184,6 @@ namespace ClassLibrary {
             OutputDataFactory outputFactory = new (connectString);
             OutputData output = outputFactory.CreateOutputData();
             output.Write(this);
-        }
-
-        private int GenerateUniqueOrderNumber() {
-            return Math.Abs(DateTime.Now.Ticks.GetHashCode());
         }
     }
 }

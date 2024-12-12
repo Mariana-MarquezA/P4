@@ -92,7 +92,6 @@ namespace UnitTests
 
             Order copy = new(original, _outputFactory);
 
-            Assert.AreEqual(original.orderNumber, copy.orderNumber);
             Assert.AreEqual(original.customerName, copy.customerName);
             Assert.AreEqual(original.customerPhone, copy.customerPhone);
             Assert.AreEqual(original.taxAmount, copy.taxAmount);
