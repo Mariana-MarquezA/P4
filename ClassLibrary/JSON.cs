@@ -2,7 +2,7 @@
  * Date:     12/11/2024
  * Version:  3.0
  * Filename: JSON.cs
- * Platform: Windows Vista 2022
+ * Platform: Windows Visual Studio 2022
  * .NET Version: NET 8.0
  */
 

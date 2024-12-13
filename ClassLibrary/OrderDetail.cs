@@ -2,7 +2,7 @@
  * Date:     12/10/2024
  * Version:  2.0
  * Filename: OrderDetails.cs
- * Platform: Windows Vista 2022
+ * Platform: Windows Visual Studio 2022
  * .NET Version: NET 8.0
  */
 
